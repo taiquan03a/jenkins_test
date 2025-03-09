@@ -18,7 +18,7 @@ pipeline {
             steps {
                 sh 'docker-compose up -d'
                 sh 'sleep 10'  // Chờ ứng dụng khởi động
-                sh 'python3 -m unittest discover -s test'  // Chạy unittest với pytest
+                sh 'docker exec my_app python3 -m unittest discover -s test'  // Chạy unittest với pytest
                 sh 'docker-compose down'
             }
         }
