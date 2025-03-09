@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/taiquan03a/jenkins_test.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'docker-compose build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'docker-compose up -d'
+                sh 'sleep 10'  // Chờ ứng dụng khởi động
+                sh 'pytest tests/'  // Chạy unittest với pytest
+                sh 'docker-compose down'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+                // Thêm lệnh deploy nếu cần
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and tests passed successfully!'
+        }
+        failure {
+            echo 'Build or tests failed. Check logs for details!'
+        }
+    }
+}
